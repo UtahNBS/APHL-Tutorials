@@ -1,11 +1,9 @@
-#!/usr/bin/env python3
-
 import html5lib
 import requests # For this task, it's easier to use requests instead of selenium
 import re
 from collections import OrderedDict
 
-# This script scrapes data from PAHvdb.
+# This script scrapes data from BioPKU's PAHvdb.
 
 # There are 2 cookies for the page. This one is the one that is required for the script to work.
 cookies = {'BIOPKUCopyrightDisclaimer': '1'}
@@ -36,7 +34,7 @@ for link in links:
     #print rows #this is blank [] for empty pages
     if rows:
         for r in rows:
-            print ''.join([t for t in r.itertext()]).encode('utf-8').strip()
+            print(''.join([t for t in r.itertext()]).encode('utf-8').strip())
         pathogenicity_report = doc.xpath('.//div[@id="right-body"]//table[2]//tr[21]//td//a')
         # Either there is a link or the pathogenicity_report list is empty
         if pathogenicity_report:
@@ -48,7 +46,7 @@ for link in links:
                     p_elements = report.xpath('//body//p[2]')
                     for p in p_elements:
                         pathogenicity = ''.join([e for e in p.itertext()])
-                        print 'Pathogenicity' + '\n' + pathogenicity
+                        print('Pathogenicity' + '\n' + pathogenicity)
                     hgvs_table = report.xpath('//table//tr//td//b')
                     hgvs_keys = ['HGVS_c', 'HGVS_g', 'HGVS_p']
                     hgvs_values = []
@@ -56,5 +54,5 @@ for link in links:
                         for b in h.itertext():
                             hgvs_values.append(b)
                     hgvs = OrderedDict(zip(hgvs_keys, hgvs_values))
-                    for k,v in hgvs.iteritems():
-                        print k + '\n' + v
+                    for k,v in hgvs.items(): #for k,v in hgvs.iteritems(): In Python 3, it is not iteritems() but items()
+                        print(k + '\n' + v)
